@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ul class="nav navbar-nav navbar-right">
+    {% if request.identity_context_data.authenticated  %}
+        <li class="nav-item">
+            Hello {{ request.identity_context_data.username }}!
+        </li>
+        <li>
+            <a class="btn btn-warning" href="{% url 'sign_out' %}">Sign Out</a>
+        </li>
+    {% elif loggedIn  %}
+        <li class="nav-item">
+            Hello {{token}} !
+        </li>
+        <li>
+            <a class="btn btn-warning" href="{% url 'sign_out' %}">Sign Out</a>
+        </li>
+    {% else %}
+        <li>
+            <a class="btn btn-success" href="{% url 'sign_in' %}">Sign In</a>
+        </li>
+    {% endif %}
+    </ul>
+</body>
+</html>

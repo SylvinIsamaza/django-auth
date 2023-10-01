@@ -1,0 +1,17 @@
+asgiref==3.7.2
+certifi==2023.7.22
+cffi==1.16.0
+charset-normalizer==3.3.0
+cryptography==41.0.4
+Django==4.2.5
+idna==3.4
+ms-identity-web @ git+https://github.com/azure-samples/ms-identity-python-utilities@9b32cef36c6c0b73c1b3237fdd66128d89f90a62
+msal==1.24.1
+pycparser==2.21
+PyJWT==2.8.0
+requests==2.31.0
+sqlparse==0.4.4
+urllib3==2.0.5
+django-cors-headers-4.2.0
+
+
