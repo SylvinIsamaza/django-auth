@@ -10,4 +10,4 @@
 
 5.Follow the instruction this video
 
-<video src="https://github.com/SylvinIsamaza/django-auth/blob/main/video.webm"></video>
+<iframe width="560" height="315" src="https://github.com/SylvinIsamaza/django-auth/blob/main/video.webm" frameborder="0" allowfullscreen></iframe>
