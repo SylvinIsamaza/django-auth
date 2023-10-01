@@ -10,4 +10,4 @@
 
 5.Follow the instruction this video
 
-<video src=""></video>
+<video src="https://github.com/SylvinIsamaza/django-auth/blob/main/video.webm"></video>
