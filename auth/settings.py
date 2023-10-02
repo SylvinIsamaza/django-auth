@@ -47,7 +47,56 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
 
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # ... include the providers you want to enable:
+
+    "allauth.socialaccount.providers.azure",
+    'allauth.socialaccount.providers.discord',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.openid',
+
+
+
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'discord': {
+        'SCOPE': ['identify', 'email'],  # Adjust scopes as needed
+        'VERIFIED_EMAIL': True,
+    },
+    'facebook': {
+        'SCOPE': ['email'],
+        'METHOD': 'oauth2',
+    },
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    },
+    'azure': {
+
+            'client_id': '2576dba7-da3c-4ec4-9cb9-d1f6758f70a4',
+            'secret': 'HR.8Q~DJhkK-ds~PiRmUAEEy2AFFGaptjU5r7c3m',
+            'key': 'login.microsoftonline.com/7ea397cb-2dee-4b19-8af8-c0704acffca5',
+            'tenant_id':'7ea397cb-2dee-4b19-8af8-c0704acffca5'
+
+
+    },
+    'github':{
+        'SCOPE': ['user:email'],
+        'CLIENT_ID':'4a96c935395ebaf4db71',
+        'secret':'8bb41aa6f02b0f53bfddf6d3346a146d443a145a',
+        'key':''
+    }
+}
+
+LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL = '/'  # Redirect URL after successful login
+LOGOUT_URL = 'account_logout'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -58,6 +107,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
+
 ]
 
 ROOT_URLCONF = 'auth.urls'
@@ -73,11 +124,21 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
+
             ],
         },
     },
 ]
+AUTHENTICATION_BACKENDS = [
 
+
+    'django.contrib.auth.backends.ModelBackend',
+
+
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+]
 WSGI_APPLICATION = 'auth.wsgi.application'
 
 # Database

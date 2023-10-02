@@ -5,10 +5,13 @@ from .serializers import UserSerializer
 from .models import User
 import jwt, datetime
 from django.conf import settings
-from django.shortcuts import redirect,render
-from django.http import JsonResponse,HttpResponse
+from django.shortcuts import redirect, render
+from django.http import JsonResponse, HttpResponse
+from django.contrib.auth import authenticate
+from allauth.socialaccount.models import SocialAccount
 
 ms_identity_web = settings.MS_IDENTITY_WEB
+
 
 # Create your views here.
 class RegisterView(APIView):
@@ -21,36 +24,46 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        email = request.data['email']
-        password = request.data['password']
-
-        user = User.objects.filter(email=email).first()
-
-        if user is None:
-            raise AuthenticationFailed('User not found!')
-
-        if not user.check_password(password):
-            raise AuthenticationFailed('Incorrect password!')
-
-        payload = {
-            'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.utcnow()
-        }
-
-        token = jwt.encode(payload, 'secret', algorithm='HS256')
-
-
+        email = request.data.get('email')
+        password = request.data.get('password')
         response = Response()
 
-        response.set_cookie(key='jwt', value=token, httponly=True)
-        response.data = {
-            'jwt': token
-        }
+        try:
+            # Try GitHub authentication first
+            github_account = SocialAccount.objects.get(provider='azure', user=User.objects.get(username=email))
+
+            if github_account:
+                return redirect('/accounts/azure/login/')
+        except User.DoesNotExist:
+            response.data = {
+                'message': 'Login failed',
+
+            }
+
+
+        except SocialAccount.DoesNotExist:
+            # If GitHub authentication fails, try normal authentication
+            user = authenticate(request, username=email, password=password)
+
+            print(user)
+
+            payload = {
+                'id': user.id,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+                'iat': datetime.datetime.utcnow()
+            }
+            token=jwt.encode(payload,'secret',algorithm='HS256').decode('utf-8')
+            if user:
+                response.data = {
+                    'message': 'Login Success (Normal Authentication)',
+                    'jwt':token
+                }
+                response.set_cookie(key='jwt', value=token, httponly=True)
+
+            else:
+                raise AuthenticationFailed('Login Failed (Normal Authentication)')
+
         return response
-
-
-
 
 
 class UserView(APIView):
@@ -83,18 +96,12 @@ class LogoutView(APIView):
 
 
 def loginPageView(request):
-    return  render(request,'users/login.html')
+    return render(request, 'users/login.html')
 
 
 def signUpPageView(request):
-    return  render(request,'users/signup.html')
+    return render(request, 'users/signup.html')
+
 
 def homePageView(request):
-    token = request.COOKIES.get('jwt')
-    if not token:
-        if request.identity_context_data.authenticated:
-            return HttpResponse('login success')
-        else:
-            return HttpResponse('login failed')
-    else:
-        return HttpResponse('login success')
+    return render(request, 'users/homepage.html')

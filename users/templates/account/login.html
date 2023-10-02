@@ -8,7 +8,7 @@
 <body>
 <div class="signup__container">
 
-    <form method="POST" class="form bg-white" action="/api/login">
+    <form method="POST" class="form bg-white" action="/api/login/">
         {% csrf_token %}
         <h2>Login</h2>
         <div class="messages">
@@ -33,7 +33,7 @@
         <div class="submit__div">
             <button type="submit">Sign in</button>
             <div>
-                <p>Don't have account <a href="/signup">Create account</a></p>
+                <p>Don't have account <a href="/accounts/signup">Create account</a></p>
             </div>
         </div>
 

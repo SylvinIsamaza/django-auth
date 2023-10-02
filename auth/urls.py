@@ -15,16 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from ms_identity_web.django.msal_views_and_urls import MsalViews
-from django.conf import  settings
 from users.views import signUpPageView, loginPageView,homePageView
-msal_urls = MsalViews(settings.MS_IDENTITY_WEB).url_patterns()
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('users.urls')),
-    path('signup/', signUpPageView, name='sign up'),
-    path('login/', loginPageView, name='Login'),
-    path('home/',homePageView,name="Homepage"),
-
-    path(f'{settings.AAD_CONFIG.django.auth_endpoints.prefix}/', include(msal_urls)),
+    path('',homePageView,name="Homepage"),
+    path('accounts/', include('allauth.urls')),
 ]
