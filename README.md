@@ -9,5 +9,6 @@
 4.To run the application go to terminal and type python manage.py runserver
 
 5.Follow the instruction this video
+[video.webm](https://github.com/SylvinIsamaza/django-auth/assets/116205933/ea633db9-8842-4671-bab5-ca816a41284b)
 
-<iframe width="560" height="315" src="https://github.com/SylvinIsamaza/django-auth/blob/main/video.webm" frameborder="0" allowfullscreen></iframe>
+
