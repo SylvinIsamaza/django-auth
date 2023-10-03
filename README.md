@@ -6,7 +6,7 @@
 
 3.Install the required dependencies by running this command pip install -r requirements.txt
 
-4.make dotenv in root directory if not exist
+4.make .env file  in root directory if not exist
 
 5.navigate to microsoft azure to create your application this link https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/RegisteredApps
 

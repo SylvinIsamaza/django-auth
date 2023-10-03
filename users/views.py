@@ -30,9 +30,9 @@ class LoginView(APIView):
 
         try:
             # Try GitHub authentication first
-            github_account = SocialAccount.objects.get(provider='azure', user=User.objects.get(username=email))
+            azure_account = SocialAccount.objects.get(provider='azure', user=User.objects.get(username=email))
 
-            if github_account:
+            if azure_account:
                 return redirect('/accounts/azure/login/')
         except User.DoesNotExist:
             response.data = {
