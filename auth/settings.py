@@ -11,11 +11,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-from ms_identity_web.configuration import AADConfig
-from ms_identity_web import IdentityWebPython
 import os
+from dotenv import load_dotenv
 
 
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%1hl^rjd=bh!5gxi7my54h^lk7(dk-*y8%4qzgnihf-b+y#u0i'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,8 +43,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users',
-
-
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -59,10 +57,10 @@ INSTALLED_APPS = [
 SOCIALACCOUNT_PROVIDERS = {
     'azure': {
 
-            'client_id': '2576dba7-da3c-4ec4-9cb9-d1f6758f70a4',
-            'secret': 'HR.8Q~DJhkK-ds~PiRmUAEEy2AFFGaptjU5r7c3m',
-            'key': 'login.microsoftonline.com/7ea397cb-2dee-4b19-8af8-c0704acffca5',
-            'tenant_id':'7ea397cb-2dee-4b19-8af8-c0704acffca5'
+            'client_id': os.getenv('AZURE_CLIENT_ID'),
+            'secret': os.getenv('AZURE_SECRET'),
+            'key': os.getenv('AZURE_KEY'),
+            'tenant_id':os.getenv('AZURE_TENANT_ID')
 
 
     },
@@ -86,7 +84,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'auth.urls'
-MIDDLEWARE.append('ms_identity_web.django.middleware.MsalMiddleware')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

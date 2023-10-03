@@ -4,14 +4,14 @@ from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer
 from .models import User
 import jwt, datetime
-from django.conf import settings
+
 from django.shortcuts import redirect, render
-from django.http import JsonResponse, HttpResponse
+
 from django.contrib.auth import authenticate
 from allauth.socialaccount.models import SocialAccount
-
-ms_identity_web = settings.MS_IDENTITY_WEB
-
+from dotenv import  load_dotenv
+import  os
+load_dotenv()
 
 # Create your views here.
 class RegisterView(APIView):
@@ -49,7 +49,7 @@ class LoginView(APIView):
 
             payload = {
                 'id': user.id,
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(os.getenv('TOKEN_EXPIRE_TIME')),
                 'iat': datetime.datetime.utcnow()
             }
             token=jwt.encode(payload,'secret',algorithm='HS256').decode('utf-8')
@@ -65,24 +65,6 @@ class LoginView(APIView):
 
         return response
 
-
-class UserView(APIView):
-
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-
-        # Check if the user is logged in with Microsoft Azure or if there's no token
-        if not token or not ms_identity_web.is_authenticated(request):
-            return redirect('login')  # Redirect to your login URL
-
-        try:
-            payload = jwt.decode(token, 'secret', algorithm='HS256')
-        except jwt.ExpiredSignatureError:
-            return redirect('login')  # Redirect to your login URL
-
-        user = User.objects.filter(id=payload['id']).first()
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
 
 
 class LogoutView(APIView):
@@ -101,7 +83,6 @@ def loginPageView(request):
 
 def signUpPageView(request):
     return render(request, 'users/signup.html')
-
 
 def homePageView(request):
     return render(request, 'users/homepage.html')
