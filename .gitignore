@@ -1,4 +1,4 @@
 .idea
 aad.config.json
 venv/*
-env
+.env

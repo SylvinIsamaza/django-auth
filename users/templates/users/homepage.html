@@ -6,6 +6,7 @@
 </head>
 <body>
 <ul class="nav navbar-nav navbar-right">
+
     {% if user.is_authenticated  %}
         <li class="nav-item">
             Hello {{user.username}}!

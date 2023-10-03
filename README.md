@@ -26,7 +26,8 @@ AZURE_TENANT_ID='{tenant id from microsoft azure}'
 
 TOKEN_EXPIRE_TIME={time you want your token to expire in minutes}
 
-TOKEN_SECRET='{your jwt token secret}'
+JWT_SECRET='{your jwt token secret}'
+
 
 8.To run the application go to terminal and type python manage.py runserver
 

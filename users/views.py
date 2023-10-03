@@ -52,7 +52,7 @@ class LoginView(APIView):
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(int(os.getenv('TOKEN_EXPIRE_TIME'))),
                 'iat': datetime.datetime.utcnow()
             }
-            token=jwt.encode(payload,'secret',algorithm='HS256').decode('utf-8')
+            token=jwt.encode(payload,os.getenv('JWT_SECRET'),algorithm='HS256').decode('utf-8')
             if user:
                 response.data = {
                     'message': 'Login Success (Normal Authentication)',
@@ -84,11 +84,6 @@ def loginPageView(request):
 def signUpPageView(request):
     return render(request, 'users/signup.html')
 
-from rest_framework.exceptions import AuthenticationFailed
-import jwt
-from django.conf import settings
-from django.contrib.auth import authenticate
-from django.shortcuts import render, redirect
 
 def homePageView(request):
     token = request.COOKIES.get('jwt')
@@ -97,7 +92,7 @@ def homePageView(request):
         return render(request, 'users/homepage.html', {'message': 'You are not logged in.'})
 
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        payload = jwt.decode(token, os.getenv('JWT_SECRET'), algorithms=['HS256'])
         user_id = payload['id']
 
         # Try to authenticate the user based on the token data
