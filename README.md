@@ -12,17 +12,24 @@
 
 6.after registering your application navigate to your application and then client credentials  and create the credentials
 
-add the following into the .env 
+7.add the following into the .env 
 
 SECRET_KEY = '{your application secret key given when creating django project}'
+
 AZURE_CLIENT_ID= '{azure client id from microsoft azure}'
+
 AZURE_SECRET= '{secret from microsoft azure}'
+
 AZURE_KEY= 'login.microsoftonline.com/{your tenant id from microsoft azure}'
+
 AZURE_TENANT_ID='{tenant id from microsoft azure}'
+
 TOKEN_EXPIRE_TIME={time you want your token to expire in minutes}
 
+TOKEN_SECRET='{your jwt token secret}'
 
-4.To run the application go to terminal and type python manage.py runserver
+8.To run the application go to terminal and type python manage.py runserver
+
 
 
 

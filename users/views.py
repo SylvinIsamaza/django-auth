@@ -42,14 +42,14 @@ class LoginView(APIView):
 
 
         except SocialAccount.DoesNotExist:
-            # If GitHub authentication fails, try normal authentication
+            # If azure authentication fails, try normal authentication
             user = authenticate(request, username=email, password=password)
 
             print(user)
 
             payload = {
                 'id': user.id,
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(os.getenv('TOKEN_EXPIRE_TIME')),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(int(os.getenv('TOKEN_EXPIRE_TIME'))),
                 'iat': datetime.datetime.utcnow()
             }
             token=jwt.encode(payload,'secret',algorithm='HS256').decode('utf-8')
@@ -84,5 +84,35 @@ def loginPageView(request):
 def signUpPageView(request):
     return render(request, 'users/signup.html')
 
+from rest_framework.exceptions import AuthenticationFailed
+import jwt
+from django.conf import settings
+from django.contrib.auth import authenticate
+from django.shortcuts import render, redirect
+
 def homePageView(request):
-    return render(request, 'users/homepage.html')
+    token = request.COOKIES.get('jwt')
+
+    if not token:
+        return render(request, 'users/homepage.html', {'message': 'You are not logged in.'})
+
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        user_id = payload['id']
+
+        # Try to authenticate the user based on the token data
+        user = authenticate(request, user_id=user_id)
+
+        if user is not None:
+            # User is authenticated
+            return render(request, 'users/homepage.html', {'message': f'Welcome, {user.username}!'})
+        else:
+            # Authentication failed
+            return render(request, 'users/homepage.html', {'message': 'Authentication failed. Please log in again.'})
+
+    except jwt.ExpiredSignatureError:
+        return redirect('/accounts/login')
+    except jwt.DecodeError:
+        return redirect('/accounts/login')
+    except Exception as e:
+        return redirect('/accounts/login')
