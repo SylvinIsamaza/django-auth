@@ -16,9 +16,6 @@ from ms_identity_web import IdentityWebPython
 import os
 
 
-AAD_CONFIG = AADConfig.parse_json(file_path='aad.config.json')
-MS_IDENTITY_WEB = IdentityWebPython(AAD_CONFIG)
-ERROR_TEMPLATE = 'users/{}.html' # for rendering 401 or other errors from msal_middleware
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,29 +51,12 @@ INSTALLED_APPS = [
     # ... include the providers you want to enable:
 
     "allauth.socialaccount.providers.azure",
-    'allauth.socialaccount.providers.discord',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.github',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.openid',
 
 
 
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-    'discord': {
-        'SCOPE': ['identify', 'email'],  # Adjust scopes as needed
-        'VERIFIED_EMAIL': True,
-    },
-    'facebook': {
-        'SCOPE': ['email'],
-        'METHOD': 'oauth2',
-    },
-    'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'},
-    },
     'azure': {
 
             'client_id': '2576dba7-da3c-4ec4-9cb9-d1f6758f70a4',
@@ -86,12 +66,6 @@ SOCIALACCOUNT_PROVIDERS = {
 
 
     },
-    'github':{
-        'SCOPE': ['user:email'],
-        'CLIENT_ID':'4a96c935395ebaf4db71',
-        'secret':'8bb41aa6f02b0f53bfddf6d3346a146d443a145a',
-        'key':''
-    }
 }
 
 LOGIN_URL = 'account_login'
